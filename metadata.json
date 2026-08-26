@@ -1,0 +1,6 @@
+{
+  "name": "patel CCTV camera",
+  "description": "Professional CCTV camera catalog, package quotation builder, surveillance storage calculator, and WhatsApp ordering for Patel CCTV camera.",
+  "requestFramePermissions": ["geolocation", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
