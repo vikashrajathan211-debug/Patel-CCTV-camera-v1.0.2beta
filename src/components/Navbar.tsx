@@ -18,7 +18,8 @@ import {
   Lock,
   Eye,
   ShieldAlert,
-  Globe
+  Globe,
+  Ruler
 } from 'lucide-react';
 import { Language, CartItem, StoreInfo, CustomerUser, HelpCategory } from '../types';
 import { subscribeSpeechState, isSpeakingAudio, stopWelcomeAudio } from '../utils/speech';
@@ -39,6 +40,7 @@ interface NavbarProps {
   onOpenEstimator: () => void;
   onOpenStorageCalc: () => void;
   onOpenSiteVisit: () => void;
+  onOpenCoverageCanvas?: () => void;
   onOpenSellerProfile: () => void;
   onOpenAdminApprovals?: () => void;
   onOpenTrackSurvey?: () => void;
@@ -61,6 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenEstimator,
   onOpenStorageCalc,
   onOpenSiteVisit,
+  onOpenCoverageCanvas,
   onOpenSellerProfile,
   onOpenAdminApprovals,
   onOpenTrackSurvey,
@@ -463,6 +466,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>{t.hddCalc}</span>
           </button>
 
+          {/* CCTV Vision Cone & Distance Measuring Tool Button */}
+          {onOpenCoverageCanvas && (
+            <button
+              onClick={onOpenCoverageCanvas}
+              id="nav-coverage-canvas-btn"
+              className="hidden xl:flex items-center gap-1.5 bg-gradient-to-r from-cyan-600/90 to-blue-600/90 hover:from-cyan-500 hover:to-blue-500 text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-xl border border-cyan-400/30 transition shadow-sm cursor-pointer"
+              title={isHi ? 'कैमरा विज़न कोन व दूरी नापने का फीता' : 'CCTV Field of View & Distance Tape Measure'}
+            >
+              <Ruler className="w-4 h-4 text-cyan-200" />
+              <span>{isHi ? 'विज़न फीता (FOV)' : 'CCTV Tape & FOV'}</span>
+            </button>
+          )}
+
           {/* Direct Phone Call */}
           <a
             href={`tel:${storeInfo.phone.replace(/\s+/g, '')}`}
@@ -523,6 +539,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Calculator className="w-3 h-3 text-emerald-400" />
             <span>{t.hddCalc}</span>
           </button>
+
+          {onOpenCoverageCanvas && (
+            <button
+              onClick={onOpenCoverageCanvas}
+              id="mobile-ribbon-coverage-canvas-btn"
+              className="flex items-center gap-1 bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-200 border border-cyan-500/40 text-[11px] font-bold px-2.5 py-1 rounded-lg shrink-0 whitespace-nowrap transition cursor-pointer active:scale-95"
+            >
+              <Ruler className="w-3 h-3 text-cyan-300" />
+              <span>{isHi ? 'विज़न फीता (FOV)' : 'Camera FOV Tape'}</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenSiteVisit}

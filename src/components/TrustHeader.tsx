@@ -9,7 +9,8 @@ import {
   CalendarCheck,
   CheckCircle2,
   MapPin,
-  Sparkles
+  Sparkles,
+  Ruler
 } from 'lucide-react';
 import { Language, CustomerUser, HelpCategory } from '../types';
 import { STORE_INFO } from '../data/products';
@@ -23,6 +24,7 @@ interface TrustHeaderProps {
   onOpenEstimator: () => void;
   onOpenStorageCalc: () => void;
   onOpenSiteVisit: () => void;
+  onOpenCoverageCanvas?: () => void;
   onOpenTrackSurvey?: () => void;
   onOpenHelpSupport?: (category?: HelpCategory) => void;
   onOpenSecurityWarning?: () => void;
@@ -36,6 +38,7 @@ export const TrustHeader: React.FC<TrustHeaderProps> = ({
   onOpenEstimator,
   onOpenStorageCalc,
   onOpenSiteVisit,
+  onOpenCoverageCanvas,
   onOpenTrackSurvey,
   onOpenHelpSupport,
   onOpenSecurityWarning,
@@ -71,6 +74,19 @@ export const TrustHeader: React.FC<TrustHeaderProps> = ({
                 >
                   <span>🪔</span>
                   <span>{diffDays > 0 ? `${t.diwaliOfferBadge} • 8/11/2026 (${diffDays} ${t.diwaliDaysLeft})` : t.diwaliOfferBadge}</span>
+                </button>
+              )}
+
+              {/* CCTV FOV Vision Cone & Measuring Tape Tool Pill */}
+              {onOpenCoverageCanvas && (
+                <button
+                  type="button"
+                  onClick={onOpenCoverageCanvas}
+                  id="header-coverage-canvas-pill-btn"
+                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-500/40 hover:to-blue-500/40 border border-cyan-400/60 rounded-full px-2.5 py-0.5 text-xs font-bold text-cyan-200 transition cursor-pointer shadow-xs shrink-0 whitespace-nowrap"
+                >
+                  <Ruler className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
+                  <span>{isHi ? '📐 कैमरा विज़न फीता (FOV नापें)' : '📐 CCTV Tape & Vision FOV'}</span>
                 </button>
               )}
 

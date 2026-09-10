@@ -54,8 +54,10 @@ import { SplashScreen } from './components/SplashScreen';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { Footer } from './components/Footer';
 import { CCTVLoader } from './components/CCTVLoader';
+import { CCTVCoverageCanvasModal } from './components/CCTVCoverageCanvasModal';
 import { speakWelcomeAudio } from './utils/speech';
 import { checkAppUpdateRequired, fetchRemoteVersionFromFirestore, UpdateCheckResult } from './utils/appVersionManager';
+import { initCapacitorMobileApp } from './utils/capacitorMobile';
 
 export default function App() {
   // State
@@ -224,6 +226,7 @@ export default function App() {
   const [activeProductModal, setActiveProductModal] = useState<Product | null>(null);
   const [isEstimatorOpen, setIsEstimatorOpen] = useState<boolean>(false);
   const [isStorageCalcOpen, setIsStorageCalcOpen] = useState<boolean>(false);
+  const [isCoverageCanvasOpen, setIsCoverageCanvasOpen] = useState<boolean>(false);
   const [isSiteVisitOpen, setIsSiteVisitOpen] = useState<boolean>(false);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isSellerProfileOpen, setIsSellerProfileOpen] = useState<boolean>(false);
@@ -270,6 +273,36 @@ export default function App() {
       clearInterval(interval);
     };
   }, []);
+
+  // Native Mobile Android APK Support: Initialize StatusBar and Hardware Back Button handling
+  useEffect(() => {
+    initCapacitorMobileApp(() => {
+      if (activeProductModal) { setActiveProductModal(null); return true; }
+      if (isCartOpen) { setIsCartOpen(false); return true; }
+      if (isCoverageCanvasOpen) { setIsCoverageCanvasOpen(false); return true; }
+      if (isEstimatorOpen) { setIsEstimatorOpen(false); return true; }
+      if (isStorageCalcOpen) { setIsStorageCalcOpen(false); return true; }
+      if (isSiteVisitOpen) { setIsSiteVisitOpen(false); return true; }
+      if (isHelpModalOpen) { setIsHelpModalOpen(false); return true; }
+      if (isSellerProfileOpen) { setIsSellerProfileOpen(false); return true; }
+      if (isAdminSurveyApprovalOpen) { setIsAdminSurveyApprovalOpen(false); return true; }
+      if (isTrackSurveyOpen) { setIsTrackSurveyOpen(false); return true; }
+      if (isDiwaliOfferOpen) { setIsDiwaliOfferOpen(false); return true; }
+      return false;
+    });
+  }, [
+    activeProductModal,
+    isCartOpen,
+    isCoverageCanvasOpen,
+    isEstimatorOpen,
+    isStorageCalcOpen,
+    isSiteVisitOpen,
+    isHelpModalOpen,
+    isSellerProfileOpen,
+    isAdminSurveyApprovalOpen,
+    isTrackSurveyOpen,
+    isDiwaliOfferOpen,
+  ]);
 
   // Deep-link check for Survey Approval, Survey Tracking, Help Grievance, or Warning Notice from WhatsApp / SMS links
   useEffect(() => {
@@ -510,6 +543,7 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenEstimator={() => openWithCCTVLoader(() => setIsEstimatorOpen(true), isHi ? 'कस्टम पैकेज कोटेशन लोड हो रहा है...' : 'Scanning Custom Package Estimator...', isHi ? 'कैमरा व DVR कॉम्बिनेशन तैयार हो रहा है' : 'Synchronizing CCTV & DVR Configuration')}
         onOpenStorageCalc={() => openWithCCTVLoader(() => setIsStorageCalcOpen(true), isHi ? 'CCTV हार्ड डिस्क कैलकुलेटर लोड हो रहा है...' : 'Calculating Surveillance Storage...', isHi ? 'DVR रिकॉर्डिंग दिन व क्षमता का आंकलन' : 'Estimating Days of CCTV Continuous Recording')}
+        onOpenCoverageCanvas={() => openWithCCTVLoader(() => setIsCoverageCanvasOpen(true), isHi ? 'CCTV विज़न फीता व FOV लोड हो रहा है...' : 'Opening CCTV Field of View & Tape Measure...', isHi ? 'कैनवास व दूरी पैमाना लोड हो रहा है' : 'Initializing Canvas & Distance Measuring Grid')}
         onOpenSiteVisit={() => openWithCCTVLoader(() => setIsSiteVisitOpen(true), isHi ? 'फ्री साइट सर्वे बुकिंग पोर्टल लोड हो रहा है...' : 'Opening Free Site Survey Booking...', isHi ? 'इंजीनियर विजिट व इंस्टॉलेशन रिक्वेस्ट' : 'Scheduling CCTV Engineer Site Inspection')}
         onOpenSellerProfile={handleOpenSellerProfile}
         onOpenAdminApprovals={() => openWithCCTVLoader(() => setIsAdminSurveyApprovalOpen(true), isHi ? 'एडमिन सर्वे अप्रूवल पैनल लोड हो रहा है...' : 'Opening Admin Approval Console...')}
@@ -562,6 +596,7 @@ export default function App() {
         onOpenCustomerAuth={() => setIsCustomerAuthOpen(true)}
         onOpenEstimator={() => openWithCCTVLoader(() => setIsEstimatorOpen(true), isHi ? 'CCTV पैकेज कोटेशन लोड हो रहा है...' : 'Loading Package Estimator...')}
         onOpenStorageCalc={() => openWithCCTVLoader(() => setIsStorageCalcOpen(true), isHi ? 'HDD स्टोरेज कैलकुलेटर लोड हो रहा है...' : 'Loading Storage Calculator...')}
+        onOpenCoverageCanvas={() => openWithCCTVLoader(() => setIsCoverageCanvasOpen(true), isHi ? 'CCTV विज़न फीता व FOV लोड हो रहा है...' : 'Opening CCTV Field of View & Tape Measure...', isHi ? 'कैनवास व दूरी पैमाना लोड हो रहा है' : 'Initializing Canvas & Distance Measuring Grid')}
         onOpenSiteVisit={() => openWithCCTVLoader(() => setIsSiteVisitOpen(true), isHi ? 'फ्री साइट सर्वे फॉर्म लोड हो रहा है...' : 'Loading Site Survey Portal...')}
         onOpenTrackSurvey={() => openWithCCTVLoader(() => setIsTrackSurveyOpen(true), isHi ? 'साइट सर्वे स्टेटस लोड हो रहा है...' : 'Tracking Site Survey...')}
         onOpenHelpSupport={(cat) => {
@@ -1132,6 +1167,19 @@ export default function App() {
         onClose={() => {
           setIsHelpModalOpen(false);
           setHelpModalTicketId(null);
+        }}
+      />
+
+      {/* CCTV Camera Vision Cone & Distance Measuring Tape Canvas Modal */}
+      <CCTVCoverageCanvasModal
+        isOpen={isCoverageCanvasOpen}
+        onClose={() => setIsCoverageCanvasOpen(false)}
+        language={language}
+        storeInfo={storeInfo}
+        onSelectProductForCart={(product) => {
+          handleAddToCart(product);
+          setIsCoverageCanvasOpen(false);
+          setIsCartOpen(true);
         }}
       />
 

@@ -13,22 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          
+          node-version: 20
+          cache: 'npm'
 
-      - name: Set up JDK 17
+      - name: Set up Java JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
 
-      - name: Install NPM dependencies
+      - name: Set up Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Install NPM Dependencies
         run: npm install
 
       - name: Build Web Application
@@ -37,35 +42,23 @@ jobs:
       - name: Sync Capacitor Android
         run: npx cap sync android
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.14.3'
-
-      - name: Ensure Gradle Wrapper is Valid
+      - name: Configure Gradle Permissions & Wrapper
         working-directory: android
         run: |
         curl -L -o gradle/wrapper/gradle-wrapper.jar [https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar](https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar)
           if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ] || [ ! -s "gradle/wrapper/gradle-wrapper.jar" ]; then
             echo "Regenerating gradle-wrapper.jar..."
-            gradle wrapper --gradle-version 8.14.3
+            gradle wrapper --gradle-version 8.11.1
           fi
-          if [ -f "gradlew" ]; then
-            chmod +x gradlew
-          fi
+          chmod +x gradlew
 
       - name: Build Debug APK
         working-directory: android
-        run: |
-          if [ -f "gradlew" ]; then
-            ./gradlew assembleDebug --stacktrace
-          else
-            gradle assembleDebug --stacktrace
-          fi
+        run: bash ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload APK Artifact
+      - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: warn
+          name: Patel-CCTV-Android-APK
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
