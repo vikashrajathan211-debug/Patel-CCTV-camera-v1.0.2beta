@@ -1,0 +1,63 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Web Assets and Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Install NPM Dependencies
+        run: npm install
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Configure Gradle Permissions & Wrapper
+        working-directory: android
+        run: |
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ] || [ ! -s "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "Regenerating gradle-wrapper.jar..."
+            gradle wrapper --gradle-version 8.11.1
+          fi
+          chmod +x gradlew
+
+      - name: Build Debug APK
+        working-directory: android
+        run: bash ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Patel-CCTV-Android-APK
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
