@@ -45,6 +45,7 @@ jobs:
       - name: Ensure Gradle Wrapper is Valid
         working-directory: android
         run: |
+        curl -L -o gradle/wrapper/gradle-wrapper.jar [https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar](https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar)
           if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ] || [ ! -s "gradle/wrapper/gradle-wrapper.jar" ]; then
             echo "Regenerating gradle-wrapper.jar..."
             gradle wrapper --gradle-version 8.14.3
