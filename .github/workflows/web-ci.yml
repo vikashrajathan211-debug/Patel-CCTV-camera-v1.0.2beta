@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install -- nopackage-lock
+        run: npm install --no-package-lock
 
       - name: Type Check & Linting
         run: npm run lint
