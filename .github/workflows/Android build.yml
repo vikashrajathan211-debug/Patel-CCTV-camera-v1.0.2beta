@@ -45,7 +45,7 @@ jobs:
       - name: Configure Gradle Permissions & Wrapper
         working-directory: android
         run: |
-          ./gradlew wrapper --gradle-version 8.11.1
+          bash ./gradlew wrapper --gradle-version 8.11.1
           
          
             
