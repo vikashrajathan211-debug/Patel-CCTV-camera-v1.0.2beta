@@ -45,10 +45,11 @@ jobs:
       - name: Configure Gradle Permissions & Wrapper
         working-directory: android
         run: |
-          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ] || [ ! -s "gradle/wrapper/gradle-wrapper.jar" ]; then
-            echo "Regenerating gradle-wrapper.jar..."
-            gradle wrapper --gradle-version 8.11.1
-          fi
+          ./gradlew wrapper --gradle-version 8.11.1
+          
+         
+            
+          
           chmod +x gradlew
 
       - name: Build Debug APK
