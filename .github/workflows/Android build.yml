@@ -46,11 +46,11 @@ jobs:
         working-directory: android
         run: |
           bash ./gradlew wrapper --gradle-version 8.11.1
-          
+          chmod +x gradlew
          
             
           
-          chmod +x gradlew
+          
 
       - name: Build Debug APK
         working-directory: android
