@@ -1,0 +1,5 @@
+- name: Configure Gradle Wrapper & Permissions
+  working-directory: android
+  run: |
+    gradle wrapper --gradle-version 8.11.1 --distribution-type all
+    chmod +x gradlew
