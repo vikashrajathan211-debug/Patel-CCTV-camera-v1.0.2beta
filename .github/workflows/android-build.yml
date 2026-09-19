@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: 'npm'
 
       - name: Set up Java JDK 17
@@ -42,14 +42,10 @@ jobs:
       - name: Sync Capacitor Android
         run: npx cap sync android
 
-      - name: ./gradlew wrapper --gradle-version 8.11.1
-      chmod +x gradlew
+      - name: Configure Gradle Wrapper & Permissions
         working-directory: android
         run: |
-          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ] || [ ! -s "gradle/wrapper/gradle-wrapper.jar" ]; then
-            echo "Regenerating gradle-wrapper.jar..."
-            gradle wrapper --gradle-version 8.11.1
-          fi
+          gradle wrapper --gradle-version 8.11.1 --distribution-type all
           chmod +x gradlew
 
       - name: Build Debug APK
