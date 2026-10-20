@@ -27,5 +27,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-implementation 'com.google.firebase:firebase-database:20.3.0'
